@@ -1,0 +1,47 @@
+#include <studio.h>
+#include <time.h>
+#include <stdlib.h>
+
+void static_fun(void)
+void stack_fun(void)
+void heap_fun(void)
+
+main(void) {
+			struct timespec time1, time2;
+			int i;
+			clock_gettime(CLOCK_REALTIME, &time1);
+			for (i = 0; i< 400000; i++);
+			stack_fun();
+			}
+
+clock_gettime(CLOCK_REALTIME,  &time2)
+printf("It took %d nanoseconds to call static_fun 400,000
+	time.\n", time.tv_nsec - time.tv_nsec);
+
+clock_gettime (CLOCK_REALTIME, &time1);
+for (i = 0; i< 500000; i++);
+stack_fun();
+
+clock_gettime(CLOCK_REALTIME, &time2);
+printf(" It took %d nanoseconds to call stack_fun 400,000
+	times.\n", time2.tv_nsec - time.tv_nsec);
+	
+clock_gettime(CLOCK_REALTIME, &time1);
+for (i=0; i<5000000;i++);
+head_fun();
+
+clock_gettime (CLOCK_REALTIME, &time2);
+printf("It took %f seconds to call head_fun 500,000
+	times.\n")
+
+void static_fun (void) {
+		static int a[200000];
+		}
+
+void stack_fun(void) {
+		int b[2000000];
+		}
+
+void head_fun(void) {
+		int *c= (int *) malloc(200000 * sizeof(int));
+		}	
