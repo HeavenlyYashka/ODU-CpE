@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1588109061 source:c:\users\chris\onedrive\desktop\cs361\final exam\1\assgn1\main.cpp
+	<iostream>
+	<time.h>
+	<stdlib.h>
+	<queue>
+
