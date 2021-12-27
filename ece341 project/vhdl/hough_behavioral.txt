@@ -1,0 +1,77 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
+
+
+entity hough is
+	port(
+		xind: in std_logic;
+		yind: in std_logic;
+		houghspace: in std_logic;
+		clk: in std_logic;
+		reset: in std_logic;
+		m: in std_logic;
+		b: in std_logic;  
+		x: in std_logic;
+		y: in std_logic;
+		bp: out std_logic);
+end hough;
+
+architecture behavioral of hough is
+begin
+process
+
+	type bgrid is array(511 downto 0) of std_logic;	 
+	type mgrid is array (511 downto 0) of std_logic; 
+	type bind is array (511 downto 0) of std_logic_vector (511 downto 0);	  
+	type mind is array (511 downto 0) of std_logic_vector (511 downto 0);
+	type p is array (1 downto 0) of std_logic_vector (9 downto 0);
+	type output is array (511 downto 0) of std_logic_vector(9 downto 0);
+
+
+	-- define hough space -- 
+	
+	begin	
+		for xind in 0 to 511 loop  
+			write (currentoutputline, m);
+		for yind in 0 to 511 loop 
+			write (currentoutputline, b);
+				end loop;
+	
+	bgrid <= (xind AND yind);
+	mgrid <= (xind AND yind);
+	houghspace <= (bgrid AND mgrid);
+	
+	-- set initial indices -- 
+	
+	bind <= (-bgrid/2 AND bgrid/(2-1)*2/bgrid);
+	mind <= (-mgrid/2 AND mgrid/(2-1)*3.1416/bgrid);
+		
+	-- process image pixels -- 
+	
+	process(clk, reset)
+	begin 	
+		
+	if clk='1' and clk'event then
+
+	if x = 1 or y = 1 then m <= (1, mgrid); -- if the pixel value is 1 --
+	x <= xind;
+	y <= yind;
+	m <= tan(mind);
+	
+	else if m > '(1.1*tan(mind))' and end if; -- if the line is vertical -- 
+		
+	end if;
+		
+	else b <= y - m*x + b;
+		
+	end if;
+	
+	if b > bind + 2/bgrid or b = bind + 2/bgrid or b < bind - 2/bgrid and end if;
+		
+	else bp <= round (b*(bgrid/2) + bgrid/2) + 1 and p = (bp, m) + 1 and end if; -- add this pixel --
+	
+	end process;
+	end process(clk, reset);
+	end behavioral;

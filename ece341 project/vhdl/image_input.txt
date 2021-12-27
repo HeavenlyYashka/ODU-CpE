@@ -1,0 +1,37 @@
+library ieee;	 
+use std.textio.all;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;	 
+
+entity image_input is
+	
+port (clk: in  std_logic; output: out std_logic_vector(511 downto 0));
+	
+end entity;
+
+architecture behavioral of image_input is
+
+signal image : std_logic_vector(511 downto 0);
+
+begin
+
+file_reader:process(clk)
+    file f : text open read_mode is "C:/Users/micha/binary.jpg";
+    variable l: line;
+    variable int: integer:= 0;
+    variable char: character;  
+
+begin
+
+if rising_edge(clk) then
+        while not endfile(f) loop
+                 readline(f, l);
+         read(l, char);
+         int := character'pos(char);
+         image  <= std_logic_vector(to_unsigned(int, image'length));  
+        end loop;
+     end if;
+    output <= image;
+  end process;
+end architecture;

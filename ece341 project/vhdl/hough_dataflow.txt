@@ -1,0 +1,82 @@
+
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;	
+
+
+entity hough is
+	port(
+		xind: in std_logic_vector (13 downto 0);
+		yind: in std_logic_vector (13 downto 0);
+		houghspace: in std_logic;
+		clk: in std_logic;
+		reset: in std_logic;
+		I: in std_logic_vector (13 downto 0);
+		m: in std_logic;
+		b: in std_logic;  
+		x: in std_logic;
+		y: in std_logic;
+		bp: out std_logic_vector(13 DOWNTO 0));
+end hough;
+
+
+ARCHITECTURE rtl OF hough IS
+
+  -- Signals
+  SIGNAL I_unsigned                       : unsigned(13 DOWNTO 0);  
+  SIGNAL Xind_unsigned                    : unsigned(13 DOWNTO 0);  
+  SIGNAL Yind_unsigned                    : unsigned(13 DOWNTO 0);  
+  SIGNAL P_tmp                            : unsigned(13 DOWNTO 0);  
+
+BEGIN
+  I_unsigned <= unsigned(I);
+
+  Xind_unsigned <= unsigned(Xind);
+
+  Yind_unsigned <= unsigned(Yind);
+
+  hough_test_fixpt_1_output : PROCESS (I_unsigned, Xind_unsigned, Yind_unsigned)
+    VARIABLE b : signed(13 DOWNTO 0);
+    VARIABLE sub_cast : signed(36 DOWNTO 0);
+    VARIABLE mul_temp : unsigned(27 DOWNTO 0);
+    VARIABLE sub_cast_0 : signed(36 DOWNTO 0);
+    VARIABLE sub_temp : signed(36 DOWNTO 0);
+    VARIABLE cast : signed(24 DOWNTO 0);
+    VARIABLE cast_0 : signed(24 DOWNTO 0);
+  BEGIN
+    -- if intercept out of bounds, ignore
+    -- add to histogram for this point 
+    sub_cast := signed(resize(Yind_unsigned & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0', 37));
+    mul_temp := to_unsigned(16#10C0#, 14) * Xind_unsigned;
+    sub_cast_0 := signed(resize(mul_temp, 37));
+    sub_temp := sub_cast - sub_cast_0;
+    b := sub_temp(34 DOWNTO 21);
+    -- y0=mx0+b, then b=y0-mx0
+    -- now solve for b
+    -- know that x=0 for y intercept, know m
+    -- have current point (x0,y0) (coordinates of this pixel)
+    -- solve for line, recall y=mx+b
+    -- for each possible slope
+    -- if the pixel is nonzero
+
+    -- Xind, Yind should be the same size, but us max 
+    -- just in case.
+    -- Make grids in parameter space same as in image space
+	
+	cast := b & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0';
+    cast_0 := b & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0' & '0';
+    IF (cast >= to_signed(16#0006000#, 25)) OR (cast_0 < to_signed(-16#0002000#, 25)) THEN 
+      P_tmp <= to_unsigned(16#0000#, 14);
+    ELSE 
+      P_tmp <= to_unsigned(16#2000#, 14);
+    END IF;
+    -- initialize indices for parameter space
+    -- for each point in the image
+    IF I_unsigned /= to_unsigned(16#0000#, 14) THEN 
+      NULL;
+    ELSE 
+      P_tmp <= to_unsigned(16#0000#, 14);
+    END IF;
+  END PROCESS hough_test_fixpt_1_output;
+
+END rtl;
